@@ -10,3 +10,8 @@ For online release documentation please refer to:
 http://nimbro.net/OP/Doc/html
 
 ![Analytics](https://ga-beacon.appspot.com/UA-85678594-1/chromeskel_a/readme?pixel)
+
+Troubleshootings
+================
+
+1. In windows, use git from linux subsystem. But do not commit as it can cause the files change its mode.
