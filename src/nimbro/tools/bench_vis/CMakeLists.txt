@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(bench_vis)
 
-add_definitions(-std=c++11)
-
 find_package(catkin REQUIRED COMPONENTS roscpp timer config_server plot_msgs rc_utils rrlogger vis_utils walk_and_kick rot_conv)
 
 find_package(Boost REQUIRED COMPONENTS system)
