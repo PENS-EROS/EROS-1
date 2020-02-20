@@ -17,7 +17,7 @@
 #include <robotcontrol/robotcontrol.h>
 
 // Includes - Packages
-#include <cm730/dynamixel.h>
+#include <opencr/dynamixel.h>
 #include <rot_conv/rot_conv.h>
 #include <rc_utils/ros_time.h>
 #include <rc_utils/slopelimited.h>
@@ -79,7 +79,7 @@
 
 // Namespaces
 using namespace robotcontrol;
-using namespace cm730;
+using namespace opencr;
 
 // NimbRo-OP interface namespace
 namespace nimbro_op_interface
