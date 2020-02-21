@@ -119,6 +119,8 @@ int CM730::connect()
   	}
 
   	m_portHandler->setPacketTimeout((uint16_t) COMMS_READ_TIMEOUT);
+	
+	m_portHandler->clearPort();
 
 	// Return that the connection was successful
 	return 0;
