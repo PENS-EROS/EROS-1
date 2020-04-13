@@ -103,7 +103,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy config_server plot_msgs)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
    INCLUDE_DIRS include
-   LIBRARIES cm730
+   LIBRARIES opencr
    CATKIN_DEPENDS roscpp config_server
 #  DEPENDS system_lib
 )
