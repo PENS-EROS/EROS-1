@@ -119,8 +119,8 @@ int CM730::connect()
   	}
 
   	m_portHandler->setPacketTimeout((uint16_t) COMMS_READ_TIMEOUT);
-	
-	m_portHandler->clearPort();
+
+  	m_portHandler->clearPort();
 
 	// Return that the connection was successful
 	return 0;
@@ -334,7 +334,11 @@ int CM730::readData(int id, int address, void* data, size_t size, struct timespe
 
 	if (dxl_comm_result != COMM_SUCCESS)
 	{
-		ROS_ERROR("CM730 readData() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
+		ROS_ERROR("CM730 readData() comm error: %s id: %d addr: %d size: %d", 
+			m_packetHandler->getTxRxResult(dxl_comm_result),
+			id,
+			address,
+			size);
 		return dxl_comm_result;
 	}
 	else if (dxl_error != 0)
@@ -638,11 +642,32 @@ int CM730::writeByte(int id, int address, int value)
 	// For protocol 1.0
 	// We send the packet: [0xFF] [0xFF] [ID] [0x04] [WRITE] [Addr] [Data] [Checksum]
 
+	int dxl_comm_result = COMM_TX_FAIL;
+	uint8_t dxl_error = 0;
+
 	// Don't do anything if the communications are suspended
 	if(isSuspended()) return COMM_TX_FAIL;
 
-	// Send the write packet and return
-	return m_packetHandler->write1ByteTxOnly(m_portHandler, (unsigned char) id, address, (unsigned char) value);
+	// Wait to receive a return packet
+	dxl_comm_result = m_packetHandler->write1ByteTxRx(m_portHandler, 
+													(uint8_t) id, 
+													(uint16_t)address, 
+													(uint8_t) value, 
+													&dxl_error);
+
+	if (dxl_error != 0)
+	{
+		ROS_ERROR("CM730 writeByte() dxl error: %s", m_packetHandler->getRxPacketError(dxl_error));
+		return (int)dxl_error;
+	}
+	else if (dxl_comm_result != COMM_SUCCESS)
+	{
+		ROS_ERROR("CM730 writeByte() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
+		return dxl_comm_result;
+	}
+
+	// Return success
+	return COMM_SUCCESS;
 }
 
 // Write one register word to a device
@@ -650,11 +675,32 @@ int CM730::writeWord(int id, int address, int value)
 {
 	// We send the packet: [0xFF] [0xFF] [ID] [0x05] [WRITE] [Addr] [Data1] [Data2] [Checksum]
 
+	int dxl_comm_result = COMM_TX_FAIL;
+	uint8_t dxl_error = 0;
+
 	// Don't do anything if the communications are suspended
 	if(isSuspended()) return COMM_TX_FAIL;
 
-	// Send the write packet and return
-	return m_packetHandler->write2ByteTxOnly(m_portHandler, (unsigned char) id, address, value);
+	// Wait to receive a return packet
+	dxl_comm_result = m_packetHandler->write2ByteTxRx(m_portHandler, 
+													(uint8_t) id, 
+													(uint16_t)address, 
+													value, 
+													&dxl_error);
+
+	if (dxl_error != 0)
+	{
+		ROS_ERROR("CM730 writeWord() dxl error: %s", m_packetHandler->getRxPacketError(dxl_error));
+		return (int)dxl_error;
+	}
+	else if (dxl_comm_result != COMM_SUCCESS)
+	{
+		ROS_ERROR("CM730 writeWord() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
+		return dxl_comm_result;
+	}
+
+	// Return success
+	return COMM_SUCCESS;
 }
 
 // Write register data to a device
@@ -662,11 +708,33 @@ int CM730::writeData(int id, int address, void* data, size_t size)
 {
 	// We send the packet: [0xFF] [0xFF] [ID] [N+3] [WRITE] [Addr] [Data1] ... [DataN] [Checksum]
 
+	int dxl_comm_result = COMM_TX_FAIL;
+	uint8_t dxl_error = 0;
+
 	// Don't do anything if the communications are suspended
 	if(isSuspended()) return COMM_TX_FAIL;
 
-	// Send the write packet and return
-	return m_packetHandler->writeTxOnly(m_portHandler, (unsigned char) id, address, size, (uint8_t *) data);
+	// Wait to receive a return packet
+	dxl_comm_result = m_packetHandler->writeTxRx(m_portHandler, 
+													(uint8_t) id, 
+													(uint16_t)address, 
+													size, 
+													(uint8_t *) data, 
+													&dxl_error);
+
+	if (dxl_error != 0)
+	{
+		ROS_ERROR("CM730 writeData() dxl error: %s", m_packetHandler->getRxPacketError(dxl_error));
+		return (int)dxl_error;
+	}
+	else if (dxl_comm_result != COMM_SUCCESS)
+	{
+		ROS_ERROR("CM730 writeData() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
+		return dxl_comm_result;
+	}
+
+	// Return success
+	return COMM_SUCCESS;
 }
 
 // Perform a sync write
