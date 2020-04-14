@@ -460,7 +460,7 @@ int CM730::bulkRead(std::vector<BRData>* servoData, BRBoard* cm730Data)
 	if((preBulkTx - m_lastFullBRPacket).toSec() > FULL_BR_PERIOD)
 		m_fullBRPacket = true;
 
-	dxl_comm_result = m_groupBulkRead.txRxPacket();
+	dxl_comm_result = m_groupBulkRead.txPacket();
     if (dxl_comm_result != COMM_SUCCESS)
     {
     	ROS_ERROR("CM730 bulkRead() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
@@ -504,6 +504,8 @@ int CM730::bulkRead(std::vector<BRData>* servoData, BRBoard* cm730Data)
 			servoInfo->startAddress = addr;
 		}
 	}
+
+	dxl_comm_result = m_groupBulkRead.rxPacket();
 
 	// Receive the returned status packets
 	for(i = 0; i < numberOfRequests; i++)
@@ -649,11 +651,16 @@ int CM730::writeByte(int id, int address, int value)
 	if(isSuspended()) return COMM_TX_FAIL;
 
 	// Wait to receive a return packet
-	dxl_comm_result = m_packetHandler->write1ByteTxRx(m_portHandler, 
+	// dxl_comm_result = m_packetHandler->write1ByteTxRx(m_portHandler, 
+	// 												(uint8_t) id, 
+	// 												(uint16_t)address, 
+	// 												(uint8_t) value, 
+	// 												&dxl_error);
+	dxl_comm_result = m_packetHandler->write1ByteTxOnly(m_portHandler, 
 													(uint8_t) id, 
 													(uint16_t)address, 
-													(uint8_t) value, 
-													&dxl_error);
+													(uint8_t) value);
+	
 
 	if (dxl_error != 0)
 	{
@@ -665,6 +672,8 @@ int CM730::writeByte(int id, int address, int value)
 		ROS_ERROR("CM730 writeByte() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
 		return dxl_comm_result;
 	}
+
+	m_portHandler->clearPort();
 
 	// Return success
 	return COMM_SUCCESS;
@@ -682,11 +691,15 @@ int CM730::writeWord(int id, int address, int value)
 	if(isSuspended()) return COMM_TX_FAIL;
 
 	// Wait to receive a return packet
-	dxl_comm_result = m_packetHandler->write2ByteTxRx(m_portHandler, 
+	// dxl_comm_result = m_packetHandler->write2ByteTxRx(m_portHandler, 
+	// 												(uint8_t) id, 
+	// 												(uint16_t)address, 
+	// 												value, 
+	// 												&dxl_error);
+	dxl_comm_result = m_packetHandler->write2ByteTxOnly(m_portHandler, 
 													(uint8_t) id, 
 													(uint16_t)address, 
-													value, 
-													&dxl_error);
+													value);
 
 	if (dxl_error != 0)
 	{
@@ -698,6 +711,8 @@ int CM730::writeWord(int id, int address, int value)
 		ROS_ERROR("CM730 writeWord() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
 		return dxl_comm_result;
 	}
+
+	m_portHandler->clearPort();
 
 	// Return success
 	return COMM_SUCCESS;
@@ -715,12 +730,17 @@ int CM730::writeData(int id, int address, void* data, size_t size)
 	if(isSuspended()) return COMM_TX_FAIL;
 
 	// Wait to receive a return packet
+	// dxl_comm_result = m_packetHandler->writeTxRx(m_portHandler, 
+	// 												(uint8_t) id, 
+	// 												(uint16_t)address, 
+	// 												size, 
+	// 												(uint8_t *) data, 
+	// 												&dxl_error);
 	dxl_comm_result = m_packetHandler->writeTxRx(m_portHandler, 
 													(uint8_t) id, 
 													(uint16_t)address, 
 													size, 
-													(uint8_t *) data, 
-													&dxl_error);
+													(uint8_t *) data);
 
 	if (dxl_error != 0)
 	{
@@ -732,6 +752,8 @@ int CM730::writeData(int id, int address, void* data, size_t size)
 		ROS_ERROR("CM730 writeData() comm error: %s", m_packetHandler->getTxRxResult(dxl_comm_result));
 		return dxl_comm_result;
 	}
+
+	m_portHandler->clearPort();
 
 	// Return success
 	return COMM_SUCCESS;
