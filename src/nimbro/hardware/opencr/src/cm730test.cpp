@@ -82,7 +82,8 @@ int main(int argc, char** argv)
 
 	cout << "Read Servo 1" << endl;
 	int readErrS1, readValueS1;
-	readErrS1 = board->readWord(1, DynamixelMX::P_PRESENT_POSITION_L, &readValueS1);
+	// TODO: Change to readData as the present position is 32 bytes in protocol 2.0
+	readErrS1 = board->readWord(1, DynamixelMX::P_PRESENT_POSITION_0, &readValueS1);
 	cout << "Resumed with Error: " << readErrS1 << " and Value: " << dec << readValueS1 << endl << endl;
 
 	board->writeByte(1, DynamixelMX::P_TORQUE_ENABLE, 1);
