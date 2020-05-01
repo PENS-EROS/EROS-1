@@ -475,7 +475,7 @@ int CM730::bulkRead(std::vector<BRData>* servoData, BRBoard* cm730Data)
 #endif
 
 	// Give the OS some time (the assumption is that after 3.7ms the servos won't be done responding yet, and the buffer inside the read thread won't be overflowing yet with responses)
-	usleep(3700); // This is an approximate equal of the time it takes before the CM730/servo responses come streaming in...
+	//usleep(3700); // This is an approximate equal of the time it takes before the CM730/servo responses come streaming in...
 
 	// Calculate the number of requests that were made in the bulk read (i.e. the number of queried devices)
 	std::vector<unsigned char> deviceIds = m_groupBulkRead.GetListId();
