@@ -113,10 +113,13 @@ RobotInterface::DXLJoint::DXLJoint(const std::string& _name)
 
 // Scaling constants
 const double RobotInterface::INT_TO_VOLTS = 0.1; // Multiply a voltage value read from the CM730 by this to convert it into volts (see 'cm730/firmware/CM730_HW/src/adc.c')
-const double RobotInterface::GYRO_SCALE = (M_PI / 180) * (2 * 250) / 65536; // From control register CTRL_REG4 in "cm730/firmware/CM730_HW/src/gyro_acc.c": +-250dps is 65536 LSb
-const double RobotInterface::ACC_SCALE = (2 * (4 * 9.81)) / 65536; // From control register CTRL_REG4 in "cm730/firmware/CM730_HW/src/gyro_acc.c": +-4g is 65536 LSb
-const double RobotInterface::MAG_SCALE = 1 / 820.0; // From Config Register B in "cm730/firmware/CM730_APP/src/compass.c": 820 LSb/gauss
-
+// Using OpenCR board (Robotis OP3) the resolution is set to +-2000dps in 16bits format
+const double RobotInterface::GYRO_SCALE = (M_PI / 180) * (2 * 2000) / 65536; // From control register CTRL_REG4 in "cm730/firmware/CM730_HW/src/gyro_acc.c": +-250dps is 65536 LSb
+// Using OpenCR board (Robotis OP3) the resolution is set to +-2g in 16bits format
+const double RobotInterface::ACC_SCALE = (2 * (2 * 9.81)) / 65536; // From control register CTRL_REG4 in "cm730/firmware/CM730_HW/src/gyro_acc.c": +-4g is 65536 LSb
+//const double RobotInterface::MAG_SCALE = 1 / 820.0; // From Config Register B in "cm730/firmware/CM730_APP/src/compass.c": 820 LSb/gauss
+const double RobotInterface::MAG_SCALE = 10.* 4912./32760.; //16bit	
+	
 /**
  * RobotInterface constructor.
  **/
