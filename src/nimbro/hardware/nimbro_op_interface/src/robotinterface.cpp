@@ -1347,7 +1347,8 @@ bool RobotInterface::readJointStates()
 	//
 
 	// Decide on an appropriate scale factor for the gyro
-	double gyroScaleFactor = rc_utils::coerce(rc_utils::interpolateCoerced<double>(m_gyroTemperatureLow(), m_gyroTemperatureHigh(), m_gyroScaleFactorLT(), m_gyroScaleFactorHT(), m_temperature), 0.2, 5.0);
+	//double gyroScaleFactor = rc_utils::coerce(rc_utils::interpolateCoerced<double>(m_gyroTemperatureLow(), m_gyroTemperatureHigh(), m_gyroScaleFactorLT(), m_gyroScaleFactorHT(), m_temperature), 0.2, 5.0);
+	double gyroScaleFactor = 1.0;  // Set to no scale factor as the opencr has no temperature sensor
 	if(m_gyroCalibrating != 0)
 	{
 		if(m_gyroCalibScaleFactor <= 0.0)
