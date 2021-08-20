@@ -1,6 +1,13 @@
 EROS P1 ROBOT
 ========================================
 
+Robot Specification:
+1. Intel NUC i7
+2. Opencr board
+3. Logitech Brio
+4. U2D2
+5. 4-pins dynamixel servos MX-28, MX-64, and MX-106 
+
 Troubleshootings
 ================
 
