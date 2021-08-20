@@ -12,17 +12,17 @@ def getCol(col, line):
     p3 = line.find('"',p2+1)
     return line[p2+1:p3]
     
-def updateCm7X0():
-    print " -> Update device rules: cm730..."  
-    result = subprocess.check_output("sudo udevadm info -a -n /dev/ttyUSB0 | grep ATTRS{serial}", shell=True)
+def updateopencr():
+    print " -> Update device rules: opencr..."  
+    result = subprocess.check_output("sudo udevadm info -a -n /dev/ttyACM0 | grep ATTRS{serial}", shell=True)
     data=[]
     toSavetty=""
     for line in result.split(os.linesep):
         serial = getCol("ATTRS{serial}=", line)
-        if len(serial)==8 and "F" in serial:
-            toSavetty='SUBSYSTEMS=="usb", ATTRS{serial}=="'+serial+'", SYMLINK+="cm730", MODE="0666", OWNER="eros"'
+        if len(serial)==12 and "F" in serial:
+            toSavetty='SUBSYSTEMS=="usb", ATTRS{serial}=="'+serial+'", SYMLINK+="cm730", MODE="0666", OWNER="anhar"'
             data.append(serial)
-            print "CM730 Serial = "+serial
+            print "opencr Serial = "+serial
         
     if len(data) > 1 :
         print colored("It seems that you have more than one ttyUSB! Please check it.","red")
@@ -38,7 +38,7 @@ def updateCm7X0():
         if(rule ==toSavetty):
             print colored("  -> Done.","green")
         else:
-            print colored("Can not update device rules: cm730.","red")
+            print colored("Can not update device rules: opencr.","red")
             sys.exit()   
 
 if __name__ == '__main__':
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         
     print "----------Start------------"
     
-    updateCm7X0()
+    updateopencr()
  
     print "----------Finish-----------"
     exit()

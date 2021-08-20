@@ -118,8 +118,8 @@ const double RobotInterface::GYRO_SCALE = (M_PI / 180) * (2 * 2000) / 65536; // 
 // Using OpenCR board (Robotis OP3) the resolution is set to +-2g in 16bits format
 const double RobotInterface::ACC_SCALE = (2 * (2 * 9.81)) / 65536; // From control register CTRL_REG4 in "cm730/firmware/CM730_HW/src/gyro_acc.c": +-4g is 65536 LSb
 //const double RobotInterface::MAG_SCALE = 1 / 820.0; // From Config Register B in "cm730/firmware/CM730_APP/src/compass.c": 820 LSb/gauss
-const double RobotInterface::MAG_SCALE = 10.* 4912./32760.; //16bit	
-	
+const double RobotInterface::MAG_SCALE = 10.* 4912./32760.; //16bit
+
 /**
  * RobotInterface constructor.
  **/
@@ -1347,8 +1347,7 @@ bool RobotInterface::readJointStates()
 	//
 
 	// Decide on an appropriate scale factor for the gyro
-	//double gyroScaleFactor = rc_utils::coerce(rc_utils::interpolateCoerced<double>(m_gyroTemperatureLow(), m_gyroTemperatureHigh(), m_gyroScaleFactorLT(), m_gyroScaleFactorHT(), m_temperature), 0.2, 5.0);
-	double gyroScaleFactor = 1.0;  // Set to no scale factor as the opencr has no temperature sensor
+	double gyroScaleFactor = rc_utils::coerce(rc_utils::interpolateCoerced<double>(m_gyroTemperatureLow(), m_gyroTemperatureHigh(), m_gyroScaleFactorLT(), m_gyroScaleFactorHT(), m_temperature), 0.2, 5.0);
 	if(m_gyroCalibrating != 0)
 	{
 		if(m_gyroCalibScaleFactor <= 0.0)
